@@ -5,6 +5,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import db from './db';
 
 export default class AppUpdater {
   constructor() {
@@ -61,6 +62,7 @@ const createWindow = async () => {
   };
 
   mainWindow = new BrowserWindow({
+    autoHideMenuBar: true,
     show: false,
     width: 1024,
     height: 728,
@@ -118,6 +120,7 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
+    db.sync();
     createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
