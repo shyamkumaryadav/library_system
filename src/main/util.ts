@@ -19,7 +19,4 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export const resolveMainPath = (filename: string) =>
-  path.join(
-    app.isPackaged ? path.dirname(__dirname) : app.getAppPath(),
-    filename
-  );
+  path.join(app.getAppPath(), filename);

@@ -6,6 +6,8 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import db from './db';
+import { initModels } from './models';
+import './ipc.db';
 
 export default class AppUpdater {
   constructor() {
@@ -120,6 +122,7 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
+    initModels(db);
     db.sync();
     createWindow();
     app.on('activate', () => {
