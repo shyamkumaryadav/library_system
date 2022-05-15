@@ -1,21 +1,22 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
-export type Channels = 'ipc-example' | 'db:getUser';
+export type SendChannels = 'ipc-example' | 'db:getUser';
+
+export type ReceiveChannels = 'winChange' | 'fullScreen' | 'status';
+
+export type InvokeChannels = 'db:getSample';
 
 contextBridge.exposeInMainWorld('electron', {
-  ipcRenderer: {
-    sendMessage(channel: Channels, args: unknown[]) {
-      ipcRenderer.send(channel, args);
-    },
-    on(channel: Channels, func: (...args: unknown[]) => void) {
-      const subscription = (_event: IpcRendererEvent, ...args: unknown[]) =>
-        func(...args);
-      ipcRenderer.on(channel, subscription);
-
-      return () => ipcRenderer.removeListener(channel, subscription);
-    },
-    once(channel: Channels, func: (...args: unknown[]) => void) {
-      ipcRenderer.once(channel, (_event, ...args) => func(...args));
-    },
+  send: (channel: SendChannels, args?: unknown[]) => {
+    ipcRenderer.send(channel, args);
+  },
+  receive: (channel: ReceiveChannels, func: (...args: unknown[]) => void) => {
+    const subscription = (_event: IpcRendererEvent, ...args: unknown[]) =>
+      func(...args);
+    ipcRenderer.on(channel, subscription);
+    return () => ipcRenderer.removeListener(channel, subscription);
+  },
+  invoke: (channel: InvokeChannels, args: unknown[]) => {
+    return ipcRenderer.invoke(channel, ...args);
   },
 });

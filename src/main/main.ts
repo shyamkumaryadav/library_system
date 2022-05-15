@@ -2,17 +2,16 @@
 import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
-import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import db from './db';
 import { initModels } from './models';
 import './ipc.db';
+import { mainLog } from './logger';
 
 export default class AppUpdater {
   constructor() {
-    log.transports.file.level = 'info';
-    autoUpdater.logger = log;
+    autoUpdater.logger = mainLog;
     autoUpdater.checkForUpdatesAndNotify();
   }
 }

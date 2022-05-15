@@ -7,6 +7,7 @@ export let resolveHtmlPath: (htmlFileName: string) => string;
 
 if (process.env.NODE_ENV === 'development') {
   const port = process.env.PORT || 1212;
+  app.getPath('userData');
   resolveHtmlPath = (htmlFileName: string) => {
     const url = new URL(`http://localhost:${port}`);
     url.pathname = htmlFileName;
@@ -19,4 +20,9 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export const resolveMainPath = (filename: string) =>
-  path.join(app.getAppPath(), filename);
+  path.join(
+    app.isPackaged
+      ? app.getPath('userData')
+      : path.dirname(path.dirname(__dirname)),
+    filename
+  );
