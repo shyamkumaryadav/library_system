@@ -1,0 +1,11 @@
+.rdg-row:hover{
+  background-color: none;
+}
+
+.rdg-row-odd{
+  background-color: #dee2e6;
+}
+
+.rdg-row-even{
+  background-color: #ffffff;
+}

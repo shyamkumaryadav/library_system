@@ -1,0 +1,10 @@
+nav.navbar{
+  background-color: #fdf4e3;
+}
+
+.navbar-nav > a {
+  opacity: 0.75;
+}
+.navbar-nav > a.active{
+  opacity: 1;
+}

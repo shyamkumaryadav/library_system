@@ -1,5 +1,48 @@
+
+// React Data Grid
+.r104f42s700-beta7 {
+  --font-size: 1em;
+}
+
+.r104f42s700-beta7:not(.rdg-light.rdg-dark) {
+  --color: none;
+  --border-color: none;
+  --summary-border-color: none;
+  --background-color: none;
+  --header-background-color: none;
+  --row-hover-background-color: #171717;
+  --row-selected-background-color: none;
+  --row-selected-hover-background-color: none;
+  --selection-color: none;
+}
+
 @import './bootstrap.scss';
 
-body {
+
+// scroll bar
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #df012d5d;
+  border-radius: 0.25em;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #df012e;
+}
+
+#root {
   user-select: none;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+#root main {
+  flex: 1 0 auto;
 }
