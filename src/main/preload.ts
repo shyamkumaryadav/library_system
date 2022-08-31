@@ -5,7 +5,12 @@ export type SendChannels = 'ipc-example' | 'db:getUser';
 
 export type ReceiveChannels = 'winChange' | 'fullScreen' | 'status';
 
-export type InvokeChannels = 'db:getUser';
+export type InvokeChannels =
+  | 'db:getUsers'
+  | 'db:getBooks'
+  | 'db:addBook'
+  | 'db:deleteBook'
+  | 'db:updateBook';
 
 const rendererLog = log.scope('renderer');
 contextBridge.exposeInMainWorld('electron', {

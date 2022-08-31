@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 const UsersList = Array.from(Array(100).keys());
 
-const Users = () => {
+const Users = (props: any) => {
   return (
     <div>
       Users /users{' '}
