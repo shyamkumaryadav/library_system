@@ -1,11 +1,11 @@
-/* eslint global-require: off, no-console: off, promise/always-return: off */
+/* eslint global-require: off, promise/always-return: off */
+import 'reflect-metadata';
 import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import db from './db';
-import { initModels } from './models';
 import './ipc.db';
 import { mainLog } from './logger';
 
@@ -20,7 +20,7 @@ let mainWindow: BrowserWindow | null = null;
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
+  mainLog.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
@@ -46,7 +46,7 @@ const installExtensions = async () => {
       extensions.map((name) => installer[name]),
       forceDownload
     )
-    .catch(console.log);
+    .catch(mainLog.error);
 };
 
 const createWindow = async () => {
@@ -121,8 +121,6 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
-    initModels(db);
-    db.sync();
     createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
@@ -130,4 +128,12 @@ app
       if (mainWindow === null) createWindow();
     });
   })
-  .catch(console.log);
+  .catch(mainLog.error);
+
+db.initialize()
+  .then(() => {
+    mainLog.log('Data Source has been initialized successfully.');
+  })
+  .catch((err) => {
+    mainLog.error('Error during Data Source initialization:', err);
+  });

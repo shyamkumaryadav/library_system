@@ -15,7 +15,7 @@
     "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts"
   },
   "dependencies": {
-    "sequelize": "^6.19.0",
-    "sqlite3": "^5.0.8"
+    "sqlite3": "^5.1.1",
+    "typeorm": "^0.3.11"
   }
 }

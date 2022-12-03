@@ -1,30 +1,29 @@
 import { ipcMain } from 'electron';
-import { Book, User } from './models';
+import { BOOK, USER } from './models';
 
 ipcMain.handle('db:getUsers', () => {
-  return User.findAll();
+  return USER.find();
 });
 
 ipcMain.handle('db:getBooks', () => {
-  return Book.findAll();
+  return BOOK.find();
 });
 
 ipcMain.handle('db:addBook', (_event, args) => {
-  return Book.create(args);
+  return BOOK.create(args);
 });
 
-ipcMain.handle('db:deleteBook', (_event, args) => {
-  return Book.destroy({
-    where: {
-      uid: args,
-    },
+ipcMain.handle('db:deleteBook', (_event, uid) => {
+  return BOOK.delete({
+    uid,
   });
 });
 
 ipcMain.handle('db:updateBook', (_event, data, uid) => {
-  return Book.update(data, {
-    where: {
+  return BOOK.update(
+    {
       uid,
     },
-  });
+    data
+  );
 });

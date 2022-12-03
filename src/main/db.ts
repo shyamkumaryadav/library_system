@@ -1,15 +1,20 @@
-import { Sequelize } from 'sequelize';
-import sqlite from 'sqlite3';
-import { sqliteLog } from './logger';
-import { resolveMainPath } from './util';
+import { app } from 'electron';
+import { DataSource } from 'typeorm';
+import * as path from 'path';
+import { sqliteLog, TypeORMLogger } from './logger';
+import { BOOK, ISSUE, USER } from './models';
 
-const DATABASE_FILE_NAME = 'db.sqlite3';
+export const dbPath = path.join(app.getPath('userData'), 'db.sqlite3');
 
-const db = new Sequelize({
-  dialect: 'sqlite',
-  storage: resolveMainPath(DATABASE_FILE_NAME),
-  dialectModule: sqlite,
-  logging: (sql) => sqliteLog.debug(sql),
+sqliteLog.log('dbPath', dbPath);
+
+const db = new DataSource({
+  type: 'sqlite',
+  database: dbPath,
+  entities: [BOOK, USER, ISSUE],
+  synchronize: true,
+  logging: true,
+  logger: new TypeORMLogger(),
 });
 
 export default db;

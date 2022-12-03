@@ -1,60 +1,29 @@
-import {
-  CreationOptional,
-  DataTypes,
-  InferCreationAttributes,
-  InferAttributes,
-  Model,
-  Sequelize,
-} from 'sequelize';
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 
-class Book extends Model<InferAttributes<Book>, InferCreationAttributes<Book>> {
-  declare uid: CreationOptional<string>;
+@Entity('book')
+class BOOK extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-  declare name: string;
+  @Column()
+  uid!: string;
 
-  declare author: string | null;
+  @Column()
+  name!: string;
 
-  declare publisher: string | null;
+  @Column()
+  author!: string;
 
-  declare genre: string | null;
+  @Column()
+  publisher!: string;
 
-  declare price: number | null;
+  @Column()
+  genre!: string;
 
-  static initModel(sequelize: Sequelize): typeof Book {
-    Book.init(
-      {
-        uid: {
-          type: DataTypes.STRING,
-          primaryKey: true,
-          allowNull: false,
-          unique: true,
-        },
-        name: {
-          type: DataTypes.STRING,
-          allowNull: false,
-        },
-        author: {
-          type: DataTypes.STRING,
-        },
-        publisher: {
-          type: DataTypes.STRING,
-        },
-        genre: {
-          type: DataTypes.STRING,
-        },
-        price: {
-          type: DataTypes.FLOAT,
-        },
-      },
-      {
-        sequelize,
-        createdAt: false,
-        updatedAt: false,
-      }
-    );
-
-    return Book;
-  }
+  @Column({
+    type: 'numeric',
+  })
+  price!: number;
 }
 
-export default Book;
+export default BOOK;

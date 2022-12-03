@@ -7,7 +7,7 @@ import './Nav.css';
 
 const Nav = () => {
   const location = useLocation();
-  window.electron.log.info(location);
+  window.electron.logger.info(location);
   return (
     <nav className="navbar navbar-expand fixed-top p-0 m-0">
       <div className="container-fluid">
