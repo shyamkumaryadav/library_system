@@ -1,32 +1,26 @@
 import { FormikErrors, FormikHelpers, useFormik } from 'formik';
 import { useEffect, useState } from 'react';
+import { BOOK } from 'main/models';
 
-export type BookType = {
-  uid: string;
-  name: string;
-  author: string;
-  publisher: string;
-  genre: string;
-  price: number;
-};
 interface Props {
   onSubmit: (
-    value: BookType,
-    formikHelpers: FormikHelpers<BookType>
-  ) => Promise<any>;
+    value: BOOK,
+    formikHelpers: FormikHelpers<BOOK>
+  ) => Promise<unknown>;
 }
 
-const initialValues = {
+const initialValues: BOOK = {
   uid: '',
   name: '',
   author: '',
   publisher: '',
   genre: '',
   price: 0,
+  id: 0,
 };
 
-const validate = (values: BookType) => {
-  const errors: FormikErrors<BookType> = {};
+const validate = (values: BOOK) => {
+  const errors: FormikErrors<BOOK> = {};
   if (!values.uid) {
     errors.uid = 'required';
   } else if (values.uid.split(' ').length !== 1) {
@@ -69,7 +63,7 @@ const Book = ({ onSubmit }: Props) => {
     };
   }, [error]);
 
-  const formik = useFormik<BookType>({
+  const formik = useFormik<BOOK>({
     initialValues,
     onSubmit: (values, helper) => {
       return onSubmit(values, helper).then((res) => {

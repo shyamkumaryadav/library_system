@@ -2,10 +2,10 @@ import { Link } from 'react-router-dom';
 
 const UsersList = Array.from(Array(100).keys());
 
-const Users = (props: any) => {
+const Users = () => {
   return (
     <div>
-      Users /users{' '}
+      Users /users
       <ul className="overflow-auto">
         {UsersList.map((el, key) => (
           <li key={el}>

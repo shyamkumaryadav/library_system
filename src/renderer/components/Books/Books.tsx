@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import DataGrid, { Column, TextEditor } from 'react-data-grid';
 import type { SetErrors } from 'renderer/App/App.d';
-import Book, { BookType } from './Book';
+import { BOOK } from 'main/models';
+import Book from './Book';
 import Delete from './Delete';
 
-const columns: readonly Column<BookType>[] = [
+const columns: readonly Column<BOOK>[] = [
   {
     key: 'uid',
     name: 'ID',
@@ -47,22 +48,21 @@ type Props = {
   setErrors: SetErrors;
 };
 
-const rowKeyGetter = ({ uid }: BookType) => uid;
+const rowKeyGetter = ({ uid }: BOOK) => uid;
 
 const Books = ({ setErrors }: Props) => {
-  const [rows, setRows] = useState([] as BookType[]);
+  const [rows, setRows] = useState([] as BOOK[]);
 
   const location = useLocation();
 
   useEffect(() => {
     window.electron
-      .invoke<unknown, BookType[]>('db:getBooks', [])
+      .invoke('db:getBooks')
       .then((res) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setRows(res.map((item: any) => item.dataValues));
+        setRows(res);
         return res;
       })
-      .catch(window.electron.log.error);
+      .catch(window.electron.logger.error);
   }, [location]);
 
   return (
@@ -76,13 +76,13 @@ const Books = ({ setErrors }: Props) => {
         rowKeyGetter={rowKeyGetter}
         onRowsChange={(allRows, { indexes, column }) => {
           const row = allRows.filter((_, i) => indexes[0] === i)[0];
-          const field = column.key as keyof BookType;
+          const field = column.key as keyof BOOK;
           window.electron
-            .invoke('db:updateBook', [{ [field]: row[field] }, row.uid])
+            .invoke('db:updateBook', row.id, row)
             .then((res) => {
               setRows((val) =>
                 val.map((i) => {
-                  if (i.uid === row.uid) {
+                  if (i.id === row.id) {
                     return { ...i, [field]: row[field] };
                   }
                   return i;
@@ -94,21 +94,21 @@ const Books = ({ setErrors }: Props) => {
               });
               return res;
             })
-            .catch(window.electron.log.error);
+            .catch(window.electron.logger.error);
         }}
       />
       <Book
         onSubmit={(values, helper) => {
           return window.electron
-            .invoke<BookType, any>('db:addBook', [values])
+            .invoke('db:addBook', values)
             .then((res) => {
-              window.electron.log.log(res);
+              window.electron.logger.log(res);
               helper.resetForm();
               setRows((row) => [...row, { ...res.dataValues }]);
               return res;
             })
             .catch((error) => {
-              window.electron.log.log({ error });
+              window.electron.logger.log({ error });
               helper.setFieldError('uid', 'Book id not unique');
               return error;
             });

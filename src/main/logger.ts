@@ -10,19 +10,23 @@ export class TypeORMLogger implements Logger {
     sqliteLog.log(message);
   }
 
-  logQuery(query: string, parameters?: any[] | undefined) {
+  logQuery(query: string, parameters?: unknown[] | undefined) {
     sqliteLog.log(query, parameters);
   }
 
   logQueryError(
     error: string | Error,
     query: string,
-    parameters?: any[] | undefined
+    parameters?: unknown[] | undefined
   ) {
     sqliteLog.error(error, query, parameters);
   }
 
-  logQuerySlow(time: number, query: string, parameters?: any[] | undefined) {
+  logQuerySlow(
+    time: number,
+    query: string,
+    parameters?: unknown[] | undefined
+  ) {
     sqliteLog.log(time, query, parameters);
   }
 
@@ -30,7 +34,7 @@ export class TypeORMLogger implements Logger {
     sqliteLog.debug(message);
   }
 
-  log(level: 'warn' | 'info' | 'log', message: any) {
+  log(level: 'warn' | 'info' | 'log', message: unknown) {
     sqliteLog[level](message);
   }
 }

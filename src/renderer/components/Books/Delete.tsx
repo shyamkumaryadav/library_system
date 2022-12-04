@@ -1,8 +1,8 @@
 import { FormatterProps } from 'react-data-grid';
 import { useNavigate } from 'react-router-dom';
-import type { BookType } from './Book';
+import { BOOK } from 'main/models';
 
-const Delete = ({ row }: FormatterProps<BookType>) => {
+const Delete = ({ row }: FormatterProps<BOOK>) => {
   const nav = useNavigate();
 
   return (
@@ -16,9 +16,9 @@ const Delete = ({ row }: FormatterProps<BookType>) => {
       onClick={(event) => {
         event.stopPropagation();
         window.electron
-          .invoke('db:deleteBook', [row.uid])
-          .then(window.electron.log.debug)
-          .catch(window.electron.log.error);
+          .invoke('db:deleteBook', row.id)
+          .then(window.electron.logger.debug)
+          .catch(window.electron.logger.error);
         nav('/books');
       }}
     >

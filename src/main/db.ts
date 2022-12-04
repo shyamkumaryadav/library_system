@@ -1,11 +1,9 @@
-import { app } from 'electron';
 import { DataSource } from 'typeorm';
-import * as path from 'path';
 import { sqliteLog, TypeORMLogger } from './logger';
 import { BOOK, ISSUE, USER } from './models';
+import { resolveMainPath } from './util';
 
-export const dbPath = path.join(app.getPath('userData'), 'db.sqlite3');
-
+const dbPath = resolveMainPath('db.sqlite3');
 sqliteLog.log('dbPath', dbPath);
 
 const db = new DataSource({

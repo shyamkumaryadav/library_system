@@ -2,7 +2,7 @@ import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import log from 'electron-log';
 import { BOOK, USER } from './models';
 
-export type SendEventNull = Array<null>;
+type SendEventNull = Array<null>;
 
 interface SendEventMap {
   'ipc-example': SendEventNull;
@@ -23,14 +23,14 @@ interface InvokeEvent<T, P> {
 interface InvokeEventMap {
   'db:getUsers': InvokeEvent<[], USER[]>;
   'db:getBooks': InvokeEvent<[], { rows: BOOK[]; count: number }>;
-  'db:addBook': InvokeEvent<[pk: number, data: BOOK], BOOK>;
+  'db:addBook': InvokeEvent<[data: BOOK], BOOK>;
   'db:deleteBook': InvokeEvent<[pk: number], BOOK>;
   'db:updateBook': InvokeEvent<[pk: number, obj: BOOK], BOOK>;
 }
 
 const rendererLog = log.scope('renderer');
 
-export const api = {
+const electronAPI = {
   logger: rendererLog,
   send: <T extends keyof SendEventMap>(
     channel: T,
@@ -42,7 +42,7 @@ export const api = {
     channel: T,
     func: (args: ReceiveEventMap[T]) => void
   ) => {
-    const subscription = (_event: IpcRendererEvent, ...args: any[]) =>
+    const subscription = (_event: IpcRendererEvent, ...args: unknown[]) =>
       func(args as ReceiveEventMap[T]);
     ipcRenderer.on(channel, subscription);
     return () => ipcRenderer.removeListener(channel, subscription);
@@ -55,4 +55,6 @@ export const api = {
   },
 };
 
-contextBridge.exposeInMainWorld('electron', api);
+contextBridge.exposeInMainWorld('electron', electronAPI);
+
+export default electronAPI;

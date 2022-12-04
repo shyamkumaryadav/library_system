@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 const IssuesList = Array.from(Array(100).keys());
 
-const Issues = (props: any) => {
+const Issues = () => {
   return (
     <div>
       Issues Form{' '}
